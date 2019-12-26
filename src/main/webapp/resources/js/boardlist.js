@@ -117,10 +117,39 @@ function show() {
 		$(".remove").css('display', 'inline-block');
 	}
 };
+function ajax(data) {
+	//{"page":1, "maxpage":6,"startpage":1, "endpage":6,"listcount":6,"limit":1,"boardlist":{{내용}}}
+	console.log(data);
+	output="";
+	$.ajax({
+		type:"POST",
+		data : data,
+		url : "BoardList.bo",
+		dataType : "json",
+		cache:false,
+		success : function(data) {
+			$("#viewcount").val(data.limit);
+			$("table").find("font").text("글 개수 : " + data.listcount);
+		}
+			
+	})
+}
+function getList() {
+	$.ajax({
+		type:"POST",
+		url : "CommentList.bo",
+		data : {"BOARD_RE_REF" : $("#BOARD_RE_REF").val()},
+		dataType : "json",
+		success:function(rdata) {
+			if(rdata.length >0) {
+				
+			}
+		}
+		
+	})
+}
 
 $(function() {
-	
-
 	$("form")
 			.submit(
 					function() {
@@ -141,7 +170,7 @@ $(function() {
 						}
 						
 					});
-
+	$("#comment table").hide();
 	$('#upfile').change(function() {
 		var inputfile = $(this).val().split('\\');
 		$('#filevalue').text(inputfile[inputfile.length - 1]);
