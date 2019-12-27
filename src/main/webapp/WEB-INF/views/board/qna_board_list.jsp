@@ -121,9 +121,10 @@
 		<c:if test="${listcount > 0 }">
 			<p>
 				<select name="search_select" size="1" id="search_select">
-					<option value="board_name">작성자</option>
-					<option value="board_subject">제목</option>
-					<option value="board_content">내용</option>
+					<option value="0">작성자</option>
+					<option value="1">제목</option>
+					<option value="2">내용</option>
+					<option value="3">제목+내용</option>
 				</select> <input type="text" id="search_text" name="search_text"
 					placeholder="검색할 내용을 입력하세요.">
 				<button type="submit" id="search_btn">검색</button>

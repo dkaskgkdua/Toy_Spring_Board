@@ -16,15 +16,58 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDAO dao;
 	
 	@Override
-	public int getListCount() {
-		return dao.getListCount();
+	public int getListCount(int search_select, String search_text) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String field = "";
+		String field2 = "";
+		switch(search_select) {
+		case 0:  //작성자
+			field = "BOARD_NAME";
+			break;
+		case 1:  //제목
+			field = "BOARD_SUBJECT";
+			break;
+		case 2:   //내용
+			field = "BOARD_CONTENT";
+			break;
+		case 3:   //제목+내용
+			field = "BOARD_SUBJECT";
+			field2 = "BOARD_CONTENT";
+			break;
+		}
+		System.out.println(field);
+		map.put("field", field);
+		map.put("field2", field2);
+		map.put("text", search_text);
+		return dao.getListCount(map);
 	}
 	@Override
-	public List<Board> getBoardList(int page, int limit) {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+	public List<Board> getBoardList(int page, int limit, int search_select, String search_text) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String field = "";
+		String field2 = "";
+		switch(search_select) {
+		case 0:  //작성자
+			field = "BOARD_NAME";
+			break;
+		case 1:  //제목
+			field = "BOARD_SUBJECT";
+			break;
+		case 2:   //내용
+			field = "BOARD_CONTENT";
+			break;
+		case 3:   //제목+내용
+			field = "BOARD_SUBJECT";
+			field2 = "BOARD_CONTENT";
+			break;
+		}
 		
+		System.out.println(field);
 		int startrow = (page-1)*limit+1;
 		int endrow = startrow+limit-1;
+		map.put("field2", field2);
+		map.put("field",field);
+		map.put("text", search_text);
 		map.put("start", startrow);
 		map.put("end", endrow);
 		return dao.getBoardList(map);

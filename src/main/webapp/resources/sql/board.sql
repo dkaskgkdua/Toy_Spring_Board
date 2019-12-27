@@ -19,3 +19,4 @@ create sequence board_seq;
 insert into BOARD values(board_seq.nextval, 'song', '1234', '제목', '내용', '','',board_seq.nextval,0, 0, 0, sysdate);
 
 select * from BOARD;
+select count(*) from board where BOARD_SUBJECT like '%1234%' or  like '%1234%';

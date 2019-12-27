@@ -9,6 +9,12 @@
 			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
 		</layout>
 	</appender>
+	<logger name="Members">
+		<level value="trace"/>
+	</logger>
+	<logger name="Boards">
+		<level value="trace"/>
+	</logger>
 	
 	<!-- Application Loggers -->
 	<logger name="com.naver.myhome5">

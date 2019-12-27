@@ -6,9 +6,9 @@ import com.naver.myhome5.domain.Board;
 
 public interface BoardService {
 	// 글 목록
-	public List<Board> getBoardList(int page, int limit);
+	public List<Board> getBoardList(int page, int limit, int search_select, String search_text);
 	// 글 갯수
-	public int getListCount();
+	public int getListCount(int search_select, String search_text);
 	// 글 내용
 	public Board getDetail(int num);
 	// 글 답변

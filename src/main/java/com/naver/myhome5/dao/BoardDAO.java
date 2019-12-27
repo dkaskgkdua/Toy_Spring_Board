@@ -15,11 +15,20 @@ public class BoardDAO {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
-	public int getListCount() {
-		return sqlSession.selectOne("Boards.count");
+	public int getListCount(Map<String, Object> map) {
+		if(map.get("field2").equals("")) {
+			return sqlSession.selectOne("Boards.count", map);
+		} else { // 제목+내용일 경우
+			return sqlSession.selectOne("Boards.countOR", map);
+		}
 	}
-	public List<Board> getBoardList(HashMap<String, Integer> map) {
-		return sqlSession.selectList("Boards.list", map);
+	public List<Board> getBoardList(Map<String, Object> map) {
+		if(map.get("field2").equals("")) {
+			return sqlSession.selectList("Boards.list", map);
+		} else { // 제목+내용일 경우
+			return sqlSession.selectList("Boards.listOR", map);
+		}
+		
 	}
 	public int boardDelete(Board board) {
 		return sqlSession.delete("Boards.delete", board);

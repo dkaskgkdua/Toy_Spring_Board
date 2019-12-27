@@ -7,8 +7,34 @@
 		from member2
 		where id = #{inputid}
 	</select>
+	<select id="select" parameterType="String" resultType="Member">
+		select *
+		from member2
+		where id = #{inputid}
+	</select>
 	<insert id="insert" parameterType="Member">
-		insert into member2 values(#{id}, #{password}, #{name}, #{age}, #{gender}, #{email})
+		insert into member2
+		values(#{id}, #{password}, #{name}, #{age}, #{gender}, #{email})
 	</insert>
-
+	<select id="count" parameterType="java.util.Map"
+		resultType="int">
+		select count(*) from member2 where ${field} like
+		'%'||#{text}||'%' and id !='admin'
+	</select>
+	<select id="list" parameterType="java.util.Map"
+		resultType="Member">
+		select * from (select rownum rnum, b.*
+		from (select * from member2 where id != 'admin'
+		and ${field} like '%'||#{text}||'%'
+		order by id) b
+		)
+		where rnum &gt;= #{start} and rnum &lt;= #{end}
+	</select>
+	<delete id="delete" parameterType="String">
+		delete from member2 where id = #{id}
+	</delete>
+	<update id="update" parameterType="Member">
+		update member2 set password = #{password}, name = #{name}, age = #{age}, gender = #{gender}, email = #{email} 
+		where id = #{id}
+	</update>
 </mapper>

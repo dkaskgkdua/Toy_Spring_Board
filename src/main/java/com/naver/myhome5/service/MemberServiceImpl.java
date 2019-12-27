@@ -1,7 +1,9 @@
 package com.naver.myhome5.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,22 +43,75 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public Member member_info(String id) {
-		return new Member();
+		return dao.member_info(id);
 	}
 	@Override
 	public void delete(String id) {
-		
+		dao.delete(id);
 	}
 	@Override
 	public int update(Member m) {
-		return 1;
+		return dao.update(m);
 	}
 	@Override
 	public List<Member> getSearchList(int index, String search_word, int page, int limit) {
-		return new ArrayList<Member>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String field = "";
+		switch(index) {
+		case 0:  //아이디
+			field = "id";
+			break;
+		case 1:  //이름
+			field = "name";
+			break;
+		case 2:   //이메일
+			field = "email";
+			break;
+		case 3:   //성별
+			field = "gender";
+			if(search_word.startsWith("남")) {
+				search_word = "1";
+			} else {
+				search_word = "2";
+			}
+			break;
+		}
+		System.out.println(field);
+		int startrow = (page-1)*limit+1;
+		int endrow = startrow+limit-1;
+		map.put("field", field);
+		map.put("text", search_word);
+		map.put("start", startrow);
+		map.put("end", endrow);
+		return dao.getSearchList(map);
 	}
 	@Override
 	public int getSearchListCount(int index, String search_word) {
-		return 1;
+		Map<String, Object> map = new HashMap<String, Object>();
+		String field = "";
+		switch(index) {
+		case 0:  //아이디
+			field = "id";
+			break;
+		case 1:  //이름
+			field = "name";
+			break;
+		case 2:   //이메일
+			field = "email";
+			break;
+		case 3:   //성별
+			field = "gender";
+			if(search_word.startsWith("남")) {
+				search_word = "1";
+			} else {
+				search_word = "2";
+			}
+			break;
+		}
+		System.out.println(field);
+
+		map.put("field", field);
+		map.put("text", search_word);
+		return dao.getSearchListCount(map);
 	}
 }

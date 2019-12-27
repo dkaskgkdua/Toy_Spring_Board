@@ -2,7 +2,7 @@ function go(page) {
    var limit = $('#viewcount').val();
    var search_select = $("#search_select").val();
    var search_text = $("#search_text").val();
-   var data = "limit=" + limit + "&state=ajax&page=" + page + "&search_select=" + search_select
+   var data = "limit=" + limit + "&page=" + page + "&search_select=" + search_select
          + "&search_text=" + search_text;
    ajax(data);
 }
@@ -24,7 +24,7 @@ function ajax(data) {
    $.ajax({
       type : "POST",
       data : data,
-      url : "BoardList.bo",
+      url : "BoardListAjax.bo",
       dataType : "json",
       cache : false,
       success : function(data) {
@@ -42,27 +42,27 @@ function ajax(data) {
                   // <c:forEach var ="b" items="${boardlist}">
                   function(index, item) {
                      output += '<tr><td>' + (num--) + '</td>'
-                     blank_count = item.BOARD_RE_LEV * 2 + 1;
+                     blank_count = item.board_RE_LEV * 2 + 1;
                      blank = '&nbsp;';
                      for (var i = 0; i < blank_count; i++) {
                         blank += '&nbsp;&nbsp;'
                      }
                      img = "";
-                     if (item.BOARD_RE_LEV > 0) {
-                        img = "<img src='images/AnswerLine.gif'>";
+                     if (item.board_RE_LEV > 0) {
+                        img = "<img src='resources/Image/AnswerLine.gif'>";
                      }
 
                      output += "<td><div>" + blank + img
                      output += '<a href="./BoardDetailAction.bo?num='
-                           + item.BOARD_NUM + '&page=' + data.page
+                           + item.board_NUM + '&page=' + data.page
                            + '">'
 
-                     output += item.BOARD_SUBJECT + '</a></div></td>'
-                     output += '<td><div>' + item.BOARD_NAME
+                     output += item.board_SUBJECT + '</a></div></td>'
+                     output += '<td><div>' + item.board_NAME
                            + '</div></td>'
-                     output += '<td><div>' + item.BOARD_DATE
+                     output += '<td><div>' + item.board_DATE
                            + '</div></td>'
-                     output += '<td><div>' + item.BOARD_READCOUNT
+                     output += '<td><div>' + item.board_READCOUNT
                            + '</div></td></tr>'
                   })
             output += '</tbody>'
@@ -117,23 +117,6 @@ function show() {
 		$(".remove").css('display', 'inline-block');
 	}
 };
-function ajax(data) {
-	//{"page":1, "maxpage":6,"startpage":1, "endpage":6,"listcount":6,"limit":1,"boardlist":{{내용}}}
-	console.log(data);
-	output="";
-	$.ajax({
-		type:"POST",
-		data : data,
-		url : "BoardList.bo",
-		dataType : "json",
-		cache:false,
-		success : function(data) {
-			$("#viewcount").val(data.limit);
-			$("table").find("font").text("글 개수 : " + data.listcount);
-		}
-			
-	})
-}
 function getList() {
 	$.ajax({
 		type:"POST",
