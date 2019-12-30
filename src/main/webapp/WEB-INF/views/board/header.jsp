@@ -46,7 +46,7 @@ min-width: 0rem;
 			<a class="nav-link" href="logout.net">
 					${id} 님(로그아웃)</a></li>
 			<li class="nav-item"><a class="nav-link"
-				href="member_update.net">정보수정</a></li>
+				href="my_info.net">정보수정</a></li>
 			
 			<c:if test="${id=='admin'}">
 				<!-- Dropdown -->

@@ -3,18 +3,20 @@ package com.naver.myhome5.controller;
 import java.io.PrintWriter;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.naver.myhome5.domain.Board;
 import com.naver.myhome5.domain.BoardAjax;
 import com.naver.myhome5.domain.Member;
 import com.naver.myhome5.service.MemberService;
@@ -25,10 +27,21 @@ public class MemberController {
 	@Autowired
 	private MemberService memberservice;
 
+	/* @CookieValue(value="saveid", required=false) Cookie readCookie
+	 * 이름이 saveid인 쿠키를 Cookie 타입으로 전달 받음
+	 * 지정한 이름의 쿠키가 존재하지 않을 수도 있기 때문에 required = false로 설정한다.
+	 * required=true 상태에서 지정한 이름을 가진 쿠키가 존재하지 않으면 스프링 MVC는 익셉션을 발생시킨다.
+	 * 
+	 * */
 	// 로그인 폼이동
 	@RequestMapping(value = "/login.net", method = RequestMethod.GET)
-	public String login() {
-		return "member/loginForm";
+	public ModelAndView login(ModelAndView mv,
+							  @CookieValue(value="saveid", required=false) Cookie readCookie) {
+		if(readCookie != null) {
+			mv.addObject("saveid", readCookie.getValue());
+		}
+		mv.setViewName("member/loginForm");
+		return mv;
 	}
 
 	@RequestMapping(value = "/member_delete.net", method = RequestMethod.GET)
@@ -45,13 +58,40 @@ public class MemberController {
 		out.close();
 	}
 	
+	@RequestMapping(value ="/my_update.net", method = RequestMethod.POST)
+	public void my_update(Member member, HttpServletResponse response) throws Exception {
+		int result = memberservice.update(member);
+
+		response.setContentType("text/html;charset=utf-8");
+
+		PrintWriter out = response.getWriter();
+		out.println("<script>");
+		if (result == 1) {
+			out.println("alert('수정성공');");
+		} else if (result == -1) {
+			out.println("alert('수정 실패');");
+		}
+		out.println("location.href='my_info.net';");
+		out.println("</script>");
+		out.close();
+	}
+	
+	@RequestMapping(value = "/my_info.net", method = RequestMethod.GET)
+	public Object my_info(HttpSession session, ModelAndView mv) {
+		String id = (String) session.getAttribute("id");
+		Member m = memberservice.member_info(id);
+		mv.setViewName("member/member_info");
+		mv.addObject("memberinfo", m);
+		return mv;
+	}
+	
 	@ResponseBody
 	@RequestMapping(value="/updateProcess.net", method = RequestMethod.POST)
 	public void updateProcess(Member member, HttpServletResponse response) throws Exception {
 		int result = memberservice.update(member);
 
 		response.setContentType("text/html;charset=utf-8");
-
+		System.out.println(member.getGender());
 		PrintWriter out = response.getWriter();
 		out.println("<script>");
 		if (result == 1) {
@@ -68,6 +108,7 @@ public class MemberController {
 		Member mem = memberservice.member_info(id);
 		return mem;
 	}
+	
 	
 
 	@RequestMapping(value = "/member_list.net", method = RequestMethod.GET)
@@ -160,13 +201,24 @@ public class MemberController {
 
 	@RequestMapping(value = "/loginProcess.net", method = RequestMethod.POST)
 	public String loginProcess(@RequestParam("id") String id, @RequestParam("password") String password,
-			HttpServletResponse response, HttpSession session) throws Exception {
+								@RequestParam(value="remember", defaultValue="") String remember,
+								HttpServletRequest request,	HttpServletResponse response, HttpSession session) throws Exception {
 
 		int result = memberservice.isId(id, password);
 		System.out.println("결과는 " + result);
 
 		if (result == 1) {
 			session.setAttribute("id", id);
+			Cookie savecookie = new Cookie("saveid", id);
+			if(!remember.equals("") ) {
+				savecookie.setMaxAge(60*60);
+				System.out.println("쿠키저장 : 60*60");
+			} else {
+				System.out.println("쿠키 저장 : 0");
+				savecookie.setMaxAge(0);
+			}
+			response.addCookie(savecookie);
+			
 			return "redirect:BoardList.bo";
 		} else {
 			String message = "비밀번호가 일치하지 않습니다.";

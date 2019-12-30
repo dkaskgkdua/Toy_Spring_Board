@@ -22,5 +22,13 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.naver.myhome5" />
+	
+	<!--  프로퍼티 파일을 이용해서 값을 주입한느 방법
+	       1. context 네임스페이스의 property-placeholder 태그를 추가하고
+	          앞에서 만든 프로퍼티 파일의 위치를 지정한다.
+	       2. Controller에서 @Value을 이용해서 값을 가져온다.
+	          @Value 어노테이션의 주요 용도는 자바 코드 외부의 리소스나 환경정보에 담긴 값을 사용하도록 지정해주는 데 있다.-->
+	
+	<context:property-placeholder location="classpath:pro/savefolder.properties"/>
 
 </beans:beans>

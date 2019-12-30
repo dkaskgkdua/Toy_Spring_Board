@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,16 @@ public class BoardController {
 
 	@Autowired
 	private CommentService commentService;
-
+	
+	/* 추가
+	 * savefolder.properties
+	 * 속성 = 값
+	 * 의 형식으로 작성하면 된다.
+	 * savefoldername=C:\\경로
+	 * 값을 가져오기 위해서는 속성을 이용한다.
+	 * */
+	@Value("${savefoldername}")
+	private String saveFolder;
 	/*
 	 * 스프링 컨테이너는 매개변수 BbsBean객체를 생성하고 BbsBean객체의 setter 메서드들을 호출하여 사용자 입력값을 설정한다.
 	 * 매개변수의 이름과 ,setter의 property가 일치하면 된다.
@@ -72,16 +82,20 @@ public class BoardController {
 		out.close();
 		return null;
 	}
+	
 	@GetMapping("BoardFileDown.bo")
 	public void BoardFileDown(String filename, HttpServletRequest request, String original, HttpServletResponse response) throws Exception {
 		String savePath = "resources/upload";
 		// 서블릿 실행 환경 정보를 담고 있는 객체를 리턴
 		ServletContext context = request.getSession().getServletContext();
 		String sDownloadPath = context.getRealPath(savePath);
-		
+		// 1. 직접 경로 설정
 		// String sFilePath = sDownloadpath + "\\" + fileName;
 		// "\"를 추가하기 위해 "\\"를 사용
-		String sFilePath = sDownloadPath + "/" + filename;
+		//String sFilePath = sDownloadPath + "/" + filename;
+		
+		// 2. properties 활용 경로 설정
+		String sFilePath = saveFolder +"/"+filename;
 		System.out.println(sFilePath);
 		
 		byte b[] = new byte[4096];
@@ -255,8 +269,11 @@ public class BoardController {
 			int year = c.get(Calendar.YEAR); // 년
 			int month = c.get(Calendar.MONTH); // 월
 			int date = c.get(Calendar.DATE); // 일
-
-			String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload/";
+			// 1. 이클립스 기반 폴더
+			//String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload/";
+			// 2. 특정 폴더
+			//String saveFolder = "D:\\MJ\\Toy_SpringBoard2\\src\\main\\webapp\\resources\\upload\\";
+			
 			String homedir = saveFolder + year + "-" + month + "-" + date;
 			System.out.println(homedir);
 			File path1 = new File(homedir);
