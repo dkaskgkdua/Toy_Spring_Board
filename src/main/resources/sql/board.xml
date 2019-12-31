@@ -111,4 +111,14 @@
 				                     )    
 		]]>
 	</delete>
+	<insert id = "insert_deleteFile" parameterType="String">
+		insert into delete_file values(#{file})
+	</insert>
+	<select  id="delete_file" resultType="String">
+		select BOARD_FILE from delete_file
+	</select>
+	<delete id ="delete_delete_file">
+		delete from delete_File
+	</delete>
+	
 </mapper>

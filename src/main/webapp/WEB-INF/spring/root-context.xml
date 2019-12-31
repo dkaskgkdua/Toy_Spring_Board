@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean class ="org.apache.commons.dbcp.BasicDataSource" id="dataSource" destroy-method="close">
@@ -36,4 +38,19 @@
 	</bean>
 	<!-- maxUploadSize : 한 번의 Request로 전달될 수 있는 최대의 크기를 의미한다. name="maxUploadSize"를 지정하지 않으면 기본으로 "-1"이 설정되는데
 	                     파일 크기가 무제한이라는 의미이다. -->
+	<!--  프로퍼티 파일을 이용해서 값을 주입하는 방법
+		<util:properties>를 이용해서 properties 타입의 빈으로 만든다. -->
+	<util:properties id="mailinfo" location ="classpath:pro/mail.properties"/>
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.naver.com"/>
+		<property name="port" value="587"/>
+		<property name="username" value="#{mailinfo['id']}"/>
+		<property name="password" value="#{mailinfo['password']}"/>
+		<property name="javaMailProperties">
+			<props> 
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.ssl.trust">smtp.naver.com</prop>
+			</props>
+		</property>
+	</bean>
 </beans>

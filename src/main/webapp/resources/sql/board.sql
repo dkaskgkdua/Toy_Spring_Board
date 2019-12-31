@@ -20,3 +20,6 @@ insert into BOARD values(board_seq.nextval, 'song', '1234', '제목', '내용', 
 
 select * from BOARD;
 select count(*) from board where BOARD_SUBJECT like '%1234%' or  like '%1234%';
+delete board;
+create table delete_File(BOARD_FILE varchar2(50) primary key)
+select * from delete_file

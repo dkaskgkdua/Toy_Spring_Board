@@ -18,15 +18,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.naver.myhome5.domain.BoardAjax;
+import com.naver.myhome5.domain.MailVO;
 import com.naver.myhome5.domain.Member;
 import com.naver.myhome5.service.MemberService;
+import com.naver.myhome5.task.SendMail;
 
 @Controller
 public class MemberController {
 
 	@Autowired
 	private MemberService memberservice;
-
+	
+	@Autowired
+	private SendMail sendMail;
 	/* @CookieValue(value="saveid", required=false) Cookie readCookie
 	 * 이름이 saveid인 쿠키를 Cookie 타입으로 전달 받음
 	 * 지정한 이름의 쿠키가 존재하지 않을 수도 있기 때문에 required = false로 설정한다.
@@ -261,6 +265,12 @@ public class MemberController {
 		PrintWriter out = response.getWriter();
 		out.println("<script>");
 		if (result == 1) {
+			
+			MailVO vo = new MailVO();
+			vo.setTo(member.getEmail());
+			vo.setContent(member.getId() + "님 회원가입을 축하드립니다.");
+			sendMail.sendMail(vo);
+			
 			out.println("alert('가입성공');");
 			out.println("location.href='login.net';");
 		} else if (result == -1) {

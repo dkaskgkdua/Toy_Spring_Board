@@ -33,6 +33,7 @@ h1 {
 			<input type="hidden" name="BOARD_NUM" value="${boarddata.BOARD_NUM}">
 			<input type="hidden" name = "BOARD_ORIGINAL" value="${boarddata.BOARD_ORIGINAL}">
 			<input type="hidden" name= "BOARD_FILE" value ="${boarddata.BOARD_FILE}">
+			<input type="hidden" name = "before_file" value ="${boarddata.BOARD_FILE}">
 			<h1>자유게시판 - 수정 페이지</h1>
 			<div class="form-group">
 				<label for="board_name">글쓴이</label> <input type="text"

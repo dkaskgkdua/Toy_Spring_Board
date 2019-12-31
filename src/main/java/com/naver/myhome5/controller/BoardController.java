@@ -54,7 +54,7 @@ public class BoardController {
 	@PostMapping("BoardDeleteAction.bo")
 	public String BoardDeleteAction(String BOARD_PASS, int num, HttpServletResponse response) throws Exception {
 		boolean usercheck = boardService.isBoardWriter(num, BOARD_PASS);
-
+		
 		if (usercheck == false) {
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter out = response.getWriter();
@@ -137,7 +137,7 @@ public class BoardController {
 		
 	}
 	@PostMapping("BoardModifyAction.bo")
-	public ModelAndView BoardModifyAction(Board board, ModelAndView mv, HttpServletResponse response,
+	public ModelAndView BoardModifyAction(Board board, String before_file, ModelAndView mv, HttpServletResponse response,
 			HttpServletRequest request) throws Exception {
 		boolean usercheck = boardService.isBoardWriter(board.getBOARD_NUM(), board.getBOARD_PASS());
 		// 비밀번호가 다를 경우
@@ -186,7 +186,11 @@ public class BoardController {
 		} else {
 			System.out.println("게시판 수정 완료!");
 			String url = "redirect:BoardDetailAction.bo?num=" + board.getBOARD_NUM();
-
+			
+			// 수정 전에 파일이 있고 새로운 파일을 선택한 경우는 삭제할 목록을 테이블에 추가한다.
+			if(!before_file.equals("") && !before_file.equals(board.getBOARD_FILE())) {
+				boardService.insert_deleteFile(before_file);
+			}
 			// 수정한 글 내용을 보여주기 위하여 글 내용 보기 페이지로 이동할 경로를 설정합니다.
 			mv.setViewName(url);
 		}

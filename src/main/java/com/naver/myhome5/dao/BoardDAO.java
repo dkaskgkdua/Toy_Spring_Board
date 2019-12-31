@@ -56,5 +56,14 @@ public class BoardDAO {
 	public Board isBoardWriter(Map map) {
 		return sqlSession.selectOne("Boards.BoardWriter", map);
 	}
+	public void insert_deleteFile(String before_file) {
+		sqlSession.insert("Boards.insert_deleteFile",before_file);
+	}
+	public List<String> select_delete_file() {
+		List<String> list = sqlSession.selectList("Boards.delete_file");
+		sqlSession.delete("Boards.delete_delete_file");
+		return list;
+	}
+	
 	
 }

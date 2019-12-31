@@ -25,4 +25,8 @@ public interface BoardService {
 	public void insertBoard(Board board);
 	// 시퀀스 수정
 	public int boardReplyUpdate(Board board);
+	// 변경, 삭제 파일 목록에 추가
+	public void insert_deleteFile(String before_file);
+	// 수정, 삭제 했던 파일 목록에 있는 것 삭제
+	public void delete_file(String saveFolder);
 }

@@ -1,5 +1,6 @@
 package com.naver.myhome5.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,27 @@ import com.naver.myhome5.domain.Board;
 public class BoardServiceImpl implements BoardService {
 	@Autowired
 	private BoardDAO dao;
-	
+	@Override
+	public void insert_deleteFile(String before_file) {
+		dao.insert_deleteFile(before_file);
+	}
+	@Override
+	public void delete_file(String saveFolder) {
+		List<String> list = dao.select_delete_file();
+		
+		
+		list.forEach(item -> {
+			String path = saveFolder + item;
+			File file = new File(path);
+			if(file.exists() == true) {
+				if(file.delete()) {
+					System.out.println("파일 삭제");
+				}
+			}
+		});
+		
+		
+	}
 	@Override
 	public int getListCount(int search_select, String search_text) {
 		Map<String, Object> map = new HashMap<String, Object>();
