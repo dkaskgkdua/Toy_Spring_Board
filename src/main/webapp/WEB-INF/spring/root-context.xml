@@ -24,7 +24,7 @@
 	
 	<!-- 트랜잭션 처리 -->
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<constructor-arg ref="dataSource"/>
+		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
 	<!-- 빈의 이름이 정해져 있다. -->

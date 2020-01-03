@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.naver.myhome5.dao.BoardDAO;
 import com.naver.myhome5.domain.Board;
@@ -108,8 +109,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 	
 	@Override
+	@Transactional
 	public int boardReply(Board board) {
 		boardReplyUpdate(board);
+		double e= 1/0;
 		board.setBOARD_RE_LEV(board.getBOARD_RE_LEV()+1);
 		board.setBOARD_RE_SEQ(board.getBOARD_RE_SEQ()+1);
 		return dao.boardReply(board);
